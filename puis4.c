@@ -1,6 +1,4 @@
 #include <stdio.h>
-#include <ctype.h>
-#include <string.h>
 
 #define NBC 7 // Number of column
 #define NBL 6 // Number of line
