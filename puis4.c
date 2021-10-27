@@ -1,6 +1,4 @@
 #include <stdio.h>
-#include <ctype.h>
-#include <string.h>
 
 #define NBC 7 // Number of column
 #define NBL 6 // Number of line
@@ -15,59 +13,71 @@ char test = 0;
 int play = 1;
 char replay;
 
-int initboard(void)
+void initboard()
 {
-  for (int i = 0 ; i < NBL ; i++){
-    for (int j = 0 ; j < NBC ; j++){
-      board[i][j] = '.';
+  for (int i = 0 ; i < NBL ; i++)
+    {
+      for (int j = 0 ; j < NBC ; j++)
+	{
+	  board[i][j] = '.';
+	}
     }
-  }
 }
   
-int printboard (void)
+void printboard ()
 {
-  for (int i = 0 ; i < NBL ; i++){
-    printf("\033[0;37m"); //define color for printf as white
-    printf("|");
-    for (int j = 0 ; j < NBC ; j++){
-      if (board[i][j] == 'x'){
-	printf("\033[0;31m"); //define color for printf as red
-      }
-      else if (board[i][j] == 'o'){
-	printf("\033[0;33m"); //define color for printf as yellow
-      }
-      printf("%c", board[i][j]);
-      printf("\033[0;37m");
+  for (int i = 0 ; i < NBL ; i++)
+    {
+      printf("\033[0;37m"); //define color for printf as white
       printf("|");
+      for (int j = 0 ; j < NBC ; j++)
+	{
+	  if (board[i][j] == 'x')
+	    {
+	      printf("\033[0;31m"); //define color for printf as red
+	    }
+	  else if (board[i][j] == 'o')
+	    {
+	      printf("\033[0;33m"); //define color for printf as yellow
+	    }
+	  printf("%c", board[i][j]);
+	  printf("\033[0;37m");
+	  printf("|");
+	}
+      printf("\n");
     }
-    printf("\n");
-  }
   printf("|1|2|3|4|5|6|7|\n");
 }
 
-int winVer()
+void winVer()
 {
-  for (int i=0; i<NBL-3; i++){
-    for (int j=0; j<NBC; j++){
-      if (board[i][j] == playerChip[player] && board[i+1][j] == playerChip[player] && board[i+2][j] == playerChip[player] && board[i+3][j] == playerChip[player]){
-	victory = 1;
-      }
+  for (int i=0; i<NBL-3; i++)
+    {
+      for (int j=0; j<NBC; j++)
+	{
+	  if (board[i][j] == playerChip[player] && board[i+1][j] == playerChip[player] && board[i+2][j] == playerChip[player] && board[i+3][j] == playerChip[player])
+	    {
+	      victory = 1;
+	    }
+	}
     }
-  }
 }
 
-int winHor()
+void winHor()
 {
-  for (int i=0; i<NBL; i++){
-    for (int j=0; j<NBC-3; j++){
-      if (board[i][j] == playerChip[player] && board[i][j+1] == playerChip[player] && board[i][j+2] == playerChip[player] && board[i][j+3] == playerChip[player]){
-	victory = 1;
-      }
+  for (int i=0; i<NBL; i++)
+    {
+      for (int j=0; j<NBC-3; j++)
+	{
+	  if (board[i][j] == playerChip[player] && board[i][j+1] == playerChip[player] && board[i][j+2] == playerChip[player] && board[i][j+3] == playerChip[player])
+	    {
+	      victory = 1;
+	    }
+	}
     }
-  }
 }
 
-int winDiag()
+void winDiag1()
 {
   for (int i=0; i<NBL; i++)
     {
@@ -77,7 +87,17 @@ int winDiag()
 	    {
 	      victory = 1;
 	    }
-	  else if(board[i][j] == playerChip[player] && board[i+1][j-1] == playerChip[player] && board[i+2][j-2] == playerChip[player] && board[i+3][j-3] == playerChip[player])
+	}
+    }
+}
+
+void winDiag2()
+{
+  for (int i=0; i<NBL-3; i++)
+    {
+      for (int j=3; j<NBC; j++)
+	{
+	  if(board[i][j] == playerChip[player] && board[i+1][j-1] == playerChip[player] && board[i+2][j-2] == playerChip[player] && board[i+3][j-3] == playerChip[player])
 	    {
 	      victory = 1;
 	    }
@@ -85,7 +105,8 @@ int winDiag()
     }
 }
 
-void clear(){
+void clear()
+{
   while(getchar() != '\n');
 }
 
@@ -95,6 +116,7 @@ int main (void)
     {
       initboard();
       player = 0;
+      usedPlace = 0;
       
       printf("Welcome to a game of Connect 4!\n");
 
@@ -125,6 +147,7 @@ int main (void)
 			{
 			  board[line][chipPos-1] = playerChip[player];
 			  test = 1;
+			  clear();
 			  break;
 			}
 		    }
@@ -133,8 +156,9 @@ int main (void)
 
 	  winHor();
 	  winVer();
-	  winDiag();
-	  usedPlace += usedPlace;
+	  winDiag1();
+	  winDiag2();
+	  usedPlace = usedPlace +1;
 	  if (victory == 0)
 	    {
 	      player = !player;
@@ -142,7 +166,7 @@ int main (void)
 	}
       printboard();
 
-      if (victory == 1 && usedPlace != 42)
+      if (victory == 1)
 	{
 	  printf("Congratulation, victory of player %d\n",player+1);
 	}
@@ -161,7 +185,6 @@ int main (void)
 	    {
 	      printf("Enter a valid answer\n");
 	      clear();
-	      continue;
 	    }
 	  else if(replay == 'y')
 	    {
