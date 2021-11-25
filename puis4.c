@@ -1,8 +1,4 @@
-#include <stdio.h>
-
-
-#define NBC 7 // Number of column
-#define NBL 6 // Number of line
+#include "AI.h"
 
 int player = 0;
 char playerChip[2] = {'o','x'};
@@ -41,40 +37,48 @@ void printboard(){
     printf("|1|2|3|4|5|6|7|\n");
 }
 
-void winVer(){
+int winVer(){
     for (int i=0; i<NBL-3; i++){
         for (int j=0; j<NBC; j++){
             if (board[i][j] == playerChip[player] && board[i+1][j] == playerChip[player] && board[i+2][j] == playerChip[player] && board[i+3][j] == playerChip[player])
-            victory = 1;
+            return 1;
         }
     }
+    return 0;
 }
 
-void winHor(){
+int winHor(){
     for (int i=0; i<NBL; i++){
         for (int j=0; j<NBC-3; j++){
             if (board[i][j] == playerChip[player] && board[i][j+1] == playerChip[player] && board[i][j+2] == playerChip[player] && board[i][j+3] == playerChip[player])
-                victory = 1;
+                return 1;
             }
     }
+    return 0;
 }
 
-void winDiag1(){
+int winDiag1(){
     for (int i=0; i<NBL; i++){
         for (int j=0; j<NBC; j++){
             if (board[i][j] == playerChip[player] && board[i+1][j+1] == playerChip[player] && board[i+2][j+2] == playerChip[player] && board[i+3][j+3] == playerChip[player])
-                victory = 1;
+                return 1;
             }
     }
+    return 0;
 }
 
-void winDiag2(){
+int winDiag2(){
     for (int i=0; i<NBL-3; i++){
         for (int j=3; j<NBC; j++){
             if(board[i][j] == playerChip[player] && board[i+1][j-1] == playerChip[player] && board[i+2][j-2] == playerChip[player] && board[i+3][j-3] == playerChip[player])
-                victory = 1;
+                return 1;
             }
     }
+    return 0;
+}
+
+int winQuestionMark(){
+    int vic = winHor() || winVer() || winDiag1() || winDiag2();
 }
 
 void clear(){
@@ -116,10 +120,7 @@ int main (void){
                 }
             }
 
-            winHor();
-            winVer();
-            winDiag1();
-            winDiag2();
+            victory = winQuestionMark();
             usedPlace = usedPlace +1;
             if (victory == 0){
                 player = !player;

@@ -9,6 +9,7 @@
                 "puis4.c",
                 "AI.c",
                 "-Wfatal-errors",
+                "-lm",
                 "-o", "puis4",
                 "&&", "./puis4"
             ],
